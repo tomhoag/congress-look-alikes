@@ -65,10 +65,10 @@ def makeEncodings(bioguideDict):
         addEncodingFor(bid, pickleData)
         
     print("[INFO] serializing encodings...")
-    fd = open("encodings.pickle","wb")
+    fd = open(args['pickle'],"wb")
     fd.write(pickle.dumps(pickleData))
     fd.close()
-    print("[INFO] encodings saved to 'encodings.pickle'")
+    print("[INFO] encodings saved to {}".format(args['pickle']))
 
 def addEncodingFor(bgid, data):
     
@@ -116,7 +116,7 @@ def writeImageWithURL(fd, url, name, cssClass):
 def makePage(tolerances, outputFile='index.html'):  
     print("[INFO] loading encodings...")
             
-    pickleData = pickle.loads(open("encodings.pickle", "rb").read())
+    pickleData = pickle.loads(open(args['pickle'], "rb").read())
     data = np.array(pickleData)
     encodings = [d["encoding"] for d in data]
     urls = [d["url"] for d in data]
@@ -228,7 +228,8 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--dataset", type=str, help="path to input directory of faces/images")
 ap.add_argument("-e", "--encode", type=bool, default=False, help="True to encode faces")
 ap.add_argument("-d", "--detection-method", type=str, default="hog", 
-    help="face detection model to use: either `hog` or `cnn`")	
+    help="face detection model to use: either `hog` or `cnn`")
+ap.add_argument("-p", "--pickle", type=str, default="ecodings.pickle", help="name of pickle file")	
 ap.add_argument("-o", "--output", type=str, default="index.html", help="name of output html file")	
 args = vars(ap.parse_args())
 
@@ -237,4 +238,4 @@ bioguideDict = loadBioguide()
 if (args["encode"]):
     makeEncodings(bioguideDict)
     
-makePage(tolerances)
+makePage(tolerances, args['output'])
