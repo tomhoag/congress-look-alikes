@@ -10,6 +10,16 @@ The results might still be available:
 
 [Current members of congress](http://congress-look-alikes.s3-website-us-east-1.amazonaws.com/current.html)
 
+## Methodology
+
+Using the roster of all current and past congress people (https://theunitedstates.io), any congress person that has a image available is encoded and saved with some other meta info in the pickle file.
+
+Using the encoded faces, each image is then compared to all of the other images.  The comparison is run multiple times, tweaking the tolerance value used with face_recognition.   If an image matches at least one other image (other than itself), the match(es) are displayed on the output page.
+
+While the initial pretext of this exercise is to discern the similarity among congress people's images, it quickly becomes an exercise in overfitting the solution to the data.
+
+
+## Run the code
 You can run the code yourself too -- you will need to install the dependencies into your python environment -- sorry no requirements file at the moment.
 
 face_recognition, os, json, urllib.request,pickle, numpy, argparse, imutils, cv2, string 
