@@ -12,6 +12,36 @@ function openTab(evt, tabName) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
 }
+
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+var slider = document.getElementById("myRange");
+var output = document.getElementById("tval");
+output.innerHTML = slider.value;
+
+slider.oninput = function(evt) {
+    if(round(parseFloat(this.value),2) == round(slider.max,2)) {
+        output.innerHTML = 'Show All';
+        tabName = 'all';
+    } else {
+        output.innerHTML = this.value;
+        tabName = 'tab' + this.value;
+        
+    }
+    openTab(evt, tabName)
+}
+
+window.onload = function onload(evt) {
+    console.log(parseFloat(slider.min))
+    console.log(round((slider.max-slider.min)/2, 2))
+    tol = round(parseFloat(slider.min) + (slider.max - slider.min)/2, 2)
+    slider.value = tol
+    output.innerHTML = tol
+    openTab(evt, "tab"+tol)    
+}
+
 </script>
      
 </body>

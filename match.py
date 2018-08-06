@@ -134,19 +134,21 @@ def makePage(tolerances, outputFile='index.html'):
     
     possibleMatches = (len(urls) * (len(urls)-1))/2
     fd.write("{} Faces -- with a possible {} incorrect matches n(n-1)/2<p>".format(len(urls), int(possibleMatches)))
-    
+        
     # create the tab bar
-    fd.write("<div class='tab'>")
+    #fd.write("<div class='tab'>")
     
-     # add an 'All' tab   
-    fd.write("<button class=\"tablinks\" onclick=\"openTab(event, 'all')\">All</button>\r\n")
+    tolMin = tolerances[0]
+    tolMax = tolerances[-1]
+    tolStep = tolerances[1] - tolerances[0]
     
-    # create a tab for each tolerance that will be used
-    for tolerance in tolerances:
-        tabname = "tab{}".format(tolerance)
-        fd.write("<button class=\"tablinks\" onclick=\"openTab(event, '{tabname}')\">T{tol}</button>\r\n".format(tabname=tabname, tol=tolerance))
+    fd.write("<div class=\"slidecontainer\">\r\n")
+    fd.write("<p>Tolerance: <span id=\"tval\"></span></p>\r\n")
+    fd.write("<input type=\"range\"  min=\"{min}\" max=\"{max}\" value=\"{val}\" step=\"{step}\" class=\"slider\" id=\"myRange\">\r\n".format(min=tolMin, max=tolMax+tolStep, step=tolStep, val=tolMin + (tolMax-tolMin)/2))
+    fd.write("</div>\r\n")
     
-    fd.write("</div>\r\n");
+    
+    #fd.write("</div>\r\n"); # close tab
     
     # the 'All' tab content
     tabname="all"
@@ -163,6 +165,8 @@ def makePage(tolerances, outputFile='index.html'):
     
     # write each of the tabs
     for (tindex, tolerance) in enumerate(tolerances):
+    
+        tolerance = float("{0:.2f}".format(tolerance))
         print("[INFO] writing tolerance tab for {}".format(tolerance))
 
         tkey = "MATCHES{}".format(tindex)
@@ -183,7 +187,7 @@ def makePage(tolerances, outputFile='index.html'):
             matches = [i for i, x in enumerate(results) if x]
     
             if len(matches) > 1: # match self and at least one other 
-                        
+                            
                 # add this CP's look-alikes
                 fd.write("<div class=\"row\">\r\n")
                 
@@ -220,8 +224,15 @@ def makePage(tolerances, outputFile='index.html'):
     fd.write(src.substitute(matchInfoDict))
     fd.close()
 
-tolerances=[0.6,0.55, 0.5, 0.45,0.44,0.43, 0.429, 0.428, 0.427, 0.426, 0.425]
-#tolerances=[0.6, 0.55]
+
+# Get this going . . . 
+
+# max is the default for face_recognition, min was selected as both all and current sets are 0 matches
+tolMax= 0.6  
+tolMin= 0.42
+tolStep = 0.01
+
+tolerances = np.arange(tolMin, tolMax + tolStep, tolStep)
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -229,7 +240,7 @@ ap.add_argument("-i", "--dataset", type=str, help="path to input directory of fa
 ap.add_argument("-e", "--encode", type=bool, default=False, help="True to encode faces")
 ap.add_argument("-d", "--detection-method", type=str, default="hog", 
     help="face detection model to use: either `hog` or `cnn`")
-ap.add_argument("-p", "--pickle", type=str, default="ecodings.pickle", help="name of pickle file")	
+ap.add_argument("-p", "--pickle", type=str, default="./ecodings.pickle", help="name of pickle file")	
 ap.add_argument("-o", "--output", type=str, default="index.html", help="name of output html file")	
 args = vars(ap.parse_args())
 
