@@ -134,9 +134,6 @@ def makePage(tolerances, outputFile='index.html', title='Congress Look Alikes'):
     
     possibleMatches = (len(urls) * (len(urls)-1))/2
     fd.write("{} Faces -- with a possible {} incorrect matches n(n-1)/2<p>".format(len(urls), int(possibleMatches)))
-        
-    # create the tab bar
-    #fd.write("<div class='tab'>")
     
     tolMin = tolerances[0]
     tolMax = tolerances[-1]
@@ -146,10 +143,7 @@ def makePage(tolerances, outputFile='index.html', title='Congress Look Alikes'):
     fd.write("<p>Tolerance: <span id=\"tval\"></span></p>\r\n")
     fd.write("<input type=\"range\"  min=\"{min}\" max=\"{max}\" value=\"{val}\" step=\"{step}\" class=\"slider\" id=\"myRange\">\r\n".format(min=tolMin, max=tolMax+tolStep, step=tolStep, val=tolMin + (tolMax-tolMin)/2))
     fd.write("</div>\r\n")
-    
-    
-    #fd.write("</div>\r\n"); # close tab
-    
+        
     # the 'All' tab content
     tabname="all"
     fd.write("<div id=\"{tabname}\" class=\"tabcontent\">\r\n".format(tabname=tabname))
@@ -239,8 +233,7 @@ tolerances = np.arange(tolMin, tolMax + tolStep, tolStep)
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--dataset", type=str, help="path to input directory of faces/images")
 ap.add_argument("-e", "--encode", type=bool, default=False, help="True to encode faces")
-ap.add_argument("-d", "--detection-method", type=str, default="hog", 
-    help="face detection model to use: either `hog` or `cnn`")
+ap.add_argument("-d", "--detection-method", type=str, default="hog", help="face detection model to use: either `hog` or `cnn`")
 ap.add_argument("-p", "--pickle", type=str, default="./ecodings.pickle", help="name of pickle file")	
 ap.add_argument("-o", "--output", type=str, default="index.html", help="name of output html file")
 ap.add_argument("-t", "--title", type=str, default="Congress Look Alikes", help="Title for the output html file")	
