@@ -113,7 +113,7 @@ def writeImageWithURL(fd, url, name, cssClass):
     fd.write("\t</div>\r\n")
     
            
-def makePage(tolerances, outputFile='index.html'):  
+def makePage(tolerances, outputFile='index.html', title='Congress Look Alikes'):  
     print("[INFO] loading encodings...")
             
     pickleData = pickle.loads(open(args['pickle'], "rb").read())
@@ -162,6 +162,7 @@ def makePage(tolerances, outputFile='index.html'):
     
     # now the tolerance tabs   
     matchInfoDict = {}
+    matchInfoDict['TITLE'] = title
     
     # write each of the tabs
     for (tindex, tolerance) in enumerate(tolerances):
@@ -241,7 +242,8 @@ ap.add_argument("-e", "--encode", type=bool, default=False, help="True to encode
 ap.add_argument("-d", "--detection-method", type=str, default="hog", 
     help="face detection model to use: either `hog` or `cnn`")
 ap.add_argument("-p", "--pickle", type=str, default="./ecodings.pickle", help="name of pickle file")	
-ap.add_argument("-o", "--output", type=str, default="index.html", help="name of output html file")	
+ap.add_argument("-o", "--output", type=str, default="index.html", help="name of output html file")
+ap.add_argument("-t", "--title", type=str, default="Congress Look Alikes", help="Title for the output html file")	
 args = vars(ap.parse_args())
 
 bioguideDict = loadBioguide()
@@ -249,4 +251,4 @@ bioguideDict = loadBioguide()
 if (args["encode"]):
     makeEncodings(bioguideDict)
     
-makePage(tolerances, args['output'])
+makePage(tolerances, args['output'], args['title'])
